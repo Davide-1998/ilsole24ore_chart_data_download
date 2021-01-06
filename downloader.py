@@ -2,7 +2,6 @@ import os
 import time
 
 import argparse
-import threading
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -139,22 +138,6 @@ def downloadData( stockName, downloadUrl, stockInterval, downloadFolder=None ) :
         os.rmdir(newFolder)
         print("Temporary folder deleted")
 
-class downloadThread(threading.Thread):
-    def __init__(self,name,downloadUrl,downloadFolder,timeInterval):
-        threading.Thread.__init__(self)
-        self.name = name #name of the thread
-        self.downloadUrl = downloadUrl
-        self.downloadFolder = downloadFolder
-        self.timeInterval = timeInterval
-    def run(self):
-        threadLock.acquire()
-        print("Started thread: {}".format(self.name))
-        downloadData(   self.name, \
-                        self.downloadUrl, \
-                        self.timeInterval, \
-                        self.downloadFolder )
-        threadLock.release()
-
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Automates the download of '\
@@ -193,16 +176,9 @@ if __name__ == '__main__':
         threads = []
         for url in open(args.refFile,'r'):            
             url = url.replace('\n','') 
-            stockName = urlToName(url)
-            threads.append( \
-                downloadThread( stockName,\
-                                url, \
-                                args.tInterval, \
-                                args.dFolder ) )
-            threads[-1].start()
-            
-            #downloadData( urlToName(url),url,\
-                          #args.tInterval,args.dFolder)
+            stockName = urlToName(url)        
+            downloadData( urlToName(url),url,\
+                          args.tInterval,args.dFolder)
 
     else:
       downloadData(urlToName(args.dUrl),args.dUrl,args.tInterval,args.dFolder)
