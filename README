@@ -1,0 +1,6 @@
+This repository provides a custom python module usable to automatically download
+data from ilsole24ore.com website.
+It exploits selenium to interact with the website.
+
+Further informations about the syntax of commands are provided through the
+*downloader -h* command
