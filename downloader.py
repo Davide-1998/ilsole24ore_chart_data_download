@@ -1,6 +1,5 @@
 import os
 import time
-
 import argparse
 
 from selenium import webdriver
@@ -11,6 +10,15 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+
+from plyer import notification
+
+def notifier(txt):
+    notification.notify( 
+                        title= "Downloader result",
+                        message= txt,
+                        timeout=2
+                        )
 
 def urlToName(url):
     name =  url.split('/')[-1]
@@ -134,6 +142,8 @@ def downloadData( stockName, downloadUrl, stockInterval, downloadFolder=None ) :
                 stockName + '_' + stockInterval + \
                 '_' + stockDate + '.csv')
 
+    notifier("Downloaded: {}".format(stockName))
+
     if os.path.isdir(newFolder):
         os.rmdir(newFolder)
         print("Temporary folder deleted")
@@ -182,6 +192,5 @@ if __name__ == '__main__':
 
     else:
       downloadData(urlToName(args.dUrl),args.dUrl,args.tInterval,args.dFolder)
-    
-    print("Total threads (1 master): {}".format(threading.activeCount()))
+
 
